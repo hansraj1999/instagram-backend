@@ -1,0 +1,65 @@
+  
+version: "3.9"
+
+services:
+  fastapi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi-app
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+      - mongo
+      # - hbase
+    networks:
+      - app-network
+    environment:
+      PYTHONUNBUFFERED: 1
+
+  mysql:
+    image: mysql:9.1.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+
+  # hbase:
+  #   image: harisekhon/hbase
+  #   container_name: hbase
+  #   ports:
+  #     - "16000:16000"
+  #     - "16010:16010"
+  #     - "2181:2181" # Zookeeper port
+  #   networks:
+  #     - app-network
+
+volumes:
+  mysql_data:
+  mongo_data:
+
+networks:
+  app-network:
+    driver: bridge
