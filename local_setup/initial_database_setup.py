@@ -1,5 +1,5 @@
 import asyncio
-from database import get_db_pool  # Assuming this imports your db connection pool setup
+from db.database import get_db_pool  # Assuming this imports your db connection pool setup
 
 
 async def execute_custom_sql():
