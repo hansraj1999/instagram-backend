@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
 from typing import List, Dict
-import ujson
 
 
 class ErrorResponse(BaseModel):
@@ -23,10 +22,6 @@ class XUserData(BaseModel):
     user_id: int
     role: str
     user_name: str
-
-
-class UserData(BaseModel):
-    x_user_data: XUserData = Field(alias="x-user-data")
 
 
 class SucessResponse(BaseModel):

@@ -10,6 +10,8 @@ from opentelemetry.instrumentation.aiohttp_client import AioHttpClientInstrument
 import logging
 import socket
 
+from routers.post import post_router
+
 logger = logging.getLogger(__name__)
 
 
@@ -29,7 +31,7 @@ def start_server():
         allow_headers=["*"],
     )
 
-    # app.include_router(short_url.router)
+    app.include_router(post_router)
 
     @app.get("/")
     async def read_item():

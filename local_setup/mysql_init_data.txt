@@ -126,3 +126,150 @@ CREATE TABLE `comments` (
 -- Index for `user_id` and `post_id`
 CREATE INDEX `idx_comments_user_id` ON `comments`(`user_id`);
 CREATE INDEX `idx_comments_post_id` ON `comments`(`post_id`);
+
+
+INSERT INTO users (
+    name, 
+    email, 
+    password_hash, 
+    profile_picture, 
+    bio, 
+    website, 
+    followers_count, 
+    following_count, 
+    posts_count, 
+    created_at, 
+    updated_at, 
+    is_verified, 
+    is_private, 
+    account_status, 
+    last_login, 
+    two_factor_enabled, 
+    preferences, 
+    device_tokens, 
+    blocked_users
+) 
+VALUES (
+    'John Doe',
+    'johndoe@example.com',
+    '',  -- Replace with an actual hash if required
+    'https://example.com/images/johndoe.png',
+    'This is Johns bio.',
+    'https://johndoe.com',
+    1,
+    1,
+    1,
+    NOW(),
+    NOW(),
+    TRUE,
+    FALSE,
+    'ACTIVE',
+    NOW(),
+    FALSE,
+    '[]',
+    '[]',
+    '[]'
+);
+
+INSERT INTO users (
+    name, 
+    email, 
+    password_hash, 
+    profile_picture, 
+    bio, 
+    website, 
+    followers_count, 
+    following_count, 
+    posts_count, 
+    created_at, 
+    updated_at, 
+    is_verified, 
+    is_private, 
+    account_status, 
+    last_login, 
+    two_factor_enabled, 
+    preferences, 
+    device_tokens, 
+    blocked_users
+) 
+VALUES (
+    'Jane Smith',
+    'janesmith@example.com',
+    '',  -- Replace with an actual hash if required
+    'https://example.com/images/janesmith.png',
+    'Jane loves blogging and photography.',
+    'https://janesmith.com',
+    1,
+    1,
+    0,
+    NOW(),
+    NOW(),
+    FALSE,
+    TRUE,
+    'ACTIVE',
+    NULL,
+    TRUE,
+    '[]',
+    '[]',
+    '[]'
+);
+
+
+INSERT INTO followers_and_following (
+    follower_id, 
+    following_id, 
+    is_accepted, 
+    is_blocked
+) 
+VALUES (
+    1,
+    2,
+    TRUE,
+    FALSE
+);
+
+INSERT INTO followers_and_following (
+    follower_id, 
+    following_id, 
+    is_accepted, 
+    is_blocked
+) 
+VALUES (
+    2,               
+    1,               
+    TRUE,             
+    FALSE          
+);
+
+
+INSERT INTO posts (
+    user_id, 
+    caption, 
+    tags, 
+    location, 
+    like_count, 
+    comment_count
+) 
+VALUES (
+    1,                            
+    'Exploring the mountains!',  
+    'travel, adventure, nature',  
+    'Rocky Mountains, USA',       
+    0,                          
+    0                            
+);
+
+INSERT INTO post_metadata (
+    post_id, 
+    media_type, 
+    cdn_url, 
+    thumbnail_url, 
+    `order`
+) 
+VALUES (
+    1,                             
+    'image',                      
+    'https://cdn.example.com/img1.jpg', 
+    'https://cdn.example.com/thumb1.jpg',
+    1                              
+);

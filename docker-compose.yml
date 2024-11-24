@@ -29,8 +29,6 @@ services:
     working_dir: /app
     volumes:
       - ./:/app
-    ports:
-      - "8001:8000"
     depends_on:
       - mysql
       - kafka
@@ -85,25 +83,18 @@ services:
     networks:
       - app-network
 
-  # mongo:
-  #   image: mongo:6.0
-  #   container_name: mongo
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongo_data:/data/db
-  #   networks:
-  #     - app-network
-
-  # hbase:
-  #   image: harisekhon/hbase
-  #   container_name: hbase
-  #   ports:
-  #     - "16000:16000"
-  #     - "16010:16010"
-  #     - "2181:2181" # Zookeeper port
-  #   networks:
-  #     - app-network
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    container_name: kafdrop
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:9093"  # Kafka broker connection string
+      SERVER_PORT: "9000"  # Kafdrop UI port
+    ports:
+      - "9000:9000"  # Expose Kafdrop on port 9000
+    depends_on:
+      - kafka
+    networks:
+      - app-network
 
 volumes:
   mysql_data:
