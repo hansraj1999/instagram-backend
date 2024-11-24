@@ -1,4 +1,4 @@
-from database import get_db_pool
+from db.database import get_db_pool
 from asyncmy.cursors import DictCursor
 
 
