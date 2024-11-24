@@ -28,7 +28,6 @@ def start_server():
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    
 
     # app.include_router(short_url.router)
 

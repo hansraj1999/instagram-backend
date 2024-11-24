@@ -5,7 +5,8 @@ FROM python:3.11-alpine
 WORKDIR /app
 
 # Install system dependencies
-RUN apk add --no-cache g++ curl
+RUN apk update && apk add --no-cache g++ curl build-base zlib-dev libffi-dev musl-dev
+
 
 
 # Copy application files

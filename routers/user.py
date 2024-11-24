@@ -20,7 +20,6 @@ async def shorten_url_endpoint(
         short_url = handler.handle()
         return {"short_url": short_url}
 
-
     except ValidationError as e:
         raise HTTPException(
             status_code=401,

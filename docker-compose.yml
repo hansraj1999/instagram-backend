@@ -14,13 +14,61 @@ services:
       - "8000:8000"
     depends_on:
       - mysql
-      - mongo
-      # - hbase
     networks:
       - app-network
     environment:
       PYTHONUNBUFFERED: 1
+      TYPE: SERVER
+  
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: worker
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "8001:8000"
+    depends_on:
+      - mysql
+      - kafka
+    networks:
+      - app-network
+    environment:
+      PYTHONUNBUFFERED: 1
+      TYPE: CONSUMER
+      TASK: POST_PROCESSOR
 
+  kafka:
+    image: wurstmeister/kafka:latest
+    container_name: kafka
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9093"
+      KAFKA_LISTENER_SECURITY_PROTOCOL: PLAINTEXT
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9093"
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENER_PORT: 9093
+      KAFKA_LISTENER_INTERFACE: 0.0.0.0
+    ports:
+      - "9093:9093"
+    depends_on:
+      - zookeeper
+    networks:
+      - app-network
+
+  zookeeper:
+    image: zookeeper:3.7
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    ports:
+      - "2181:2181"
+    networks:
+      - app-network
+  
   mysql:
     image: mysql:9.1.0
     container_name: mysql
