@@ -36,15 +36,15 @@ services:
     networks:
       - app-network
 
-  mongo:
-    image: mongo:6.0
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-    networks:
-      - app-network
+  # mongo:
+  #   image: mongo:6.0
+  #   container_name: mongo
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo_data:/data/db
+  #   networks:
+  #     - app-network
 
   # hbase:
   #   image: harisekhon/hbase

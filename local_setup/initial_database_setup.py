@@ -1,6 +1,7 @@
 import asyncio
 from database import get_db_pool  # Assuming this imports your db connection pool setup
 
+
 async def execute_custom_sql():
     # Read the SQL queries from the file
     with open("./mysql_init_data.txt", 'r') as file:
