@@ -1,1 +1,1 @@
-# blogging-platform
+# Instagram clone backend
