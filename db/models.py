@@ -3,7 +3,7 @@ from sqlalchemy.dialects.mysql import JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from database import Base
+from db.database import Base
 
 
 class User(Base):
