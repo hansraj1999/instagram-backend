@@ -25,7 +25,7 @@ class KafkaConsumerService:
             *self.topic,
             bootstrap_servers=self.brokers,
             # group_id=self.group_id,
-            auto_offset_reset="earliest",  # Start from the earliest available offset
+            auto_offset_reset="latest",  # Start from the earliest available offset
             enable_auto_commit=True,  # Automatically commit offsets
             consumer_timeout_ms=1000,  # Timeout for long polling
             max_poll_records=100,  # Max number of records to fetch in one poll
