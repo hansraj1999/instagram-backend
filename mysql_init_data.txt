@@ -1,0 +1,128 @@
+-- Disable foreign key posts
+SET foreign_key_checks = 0;
+
+DROP TABLE IF EXISTS `posts`;
+
+-- Drop 'likes' table
+DROP TABLE IF EXISTS `likes`;
+
+-- Drop 'comments' table
+DROP TABLE IF EXISTS `comments`;
+
+-- Drop 'post_metadata' table
+DROP TABLE IF EXISTS `post_metadata`;
+
+-- Drop 'followers_and_following' table
+DROP TABLE IF EXISTS `followers_and_following`;
+
+-- Drop 'users' table
+DROP TABLE IF EXISTS `users`;
+
+-- Re-enable foreign key checks
+SET foreign_key_checks = 1;
+
+-- Create `users` table
+CREATE TABLE `users` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) UNIQUE,
+    `password_hash` TEXT,
+    `profile_picture` VARCHAR(255),
+    `bio` TEXT,
+    `website` VARCHAR(255),
+    `followers_count` INT,
+    `following_count` INT,
+    `posts_count` INT,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `is_verified` BOOLEAN DEFAULT FALSE,
+    `is_private` BOOLEAN DEFAULT FALSE,
+    `account_status` ENUM('ACTIVE', 'INACTIVE', 'PENDING') DEFAULT 'ACTIVE',
+    `last_login` DATETIME,
+    `two_factor_enabled` BOOLEAN,
+    `preferences` JSON,
+    `device_tokens` JSON,
+    `blocked_users` JSON 
+) ENGINE=InnoDB;
+
+-- Index on `email` for faster lookup
+CREATE INDEX `idx_users_email` ON `users`(`email`);
+
+-- Create `followers_and_following` table
+CREATE TABLE `followers_and_following` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `follower_id` INT,
+    `following_id` INT,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `is_accepted` BOOLEAN DEFAULT FALSE,
+    `is_blocked` BOOLEAN DEFAULT FALSE,
+    `last_interaction` DATETIME,
+    UNIQUE KEY `unique_following` (`follower_id`, `following_id`)
+) ENGINE=InnoDB;
+
+-- Indexes for `follower_id` and `following_id`
+CREATE INDEX `idx_followers_follower_id` ON `followers_and_following`(`follower_id`);
+CREATE INDEX `idx_followers_following_id` ON `followers_and_following`(`following_id`);
+
+-- Create `posts` table
+CREATE TABLE `posts` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT,
+    `caption` TEXT,
+    `tags` TEXT,
+    `location` TEXT,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `like_count` INT DEFAULT 0,
+    `comment_count` INT DEFAULT 0,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
+) ENGINE=InnoDB;
+
+-- Create `post_metadata` table
+CREATE TABLE `post_metadata` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `post_id` INT,
+    `media_type` VARCHAR(255),
+    `cdn_url` TEXT,
+    `thumbnail_url` TEXT,
+    `order` INT,
+    FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`)
+) ENGINE=InnoDB;
+
+-- Index for `post_id`
+CREATE INDEX `idx_post_metadata_post_id` ON `post_metadata`(`post_id`);
+
+
+
+-- Index for `user_id`
+CREATE INDEX `idx_posts_user_id` ON `posts`(`user_id`);
+
+-- Create `likes` table
+CREATE TABLE `likes` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT,
+    `post_id` INT,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+    FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`),
+    UNIQUE KEY `unique_like` (`user_id`, `post_id`)
+) ENGINE=InnoDB;
+
+-- Index for `user_id` and `post_id`
+CREATE INDEX `idx_likes_user_id` ON `likes`(`user_id`);
+CREATE INDEX `idx_likes_post_id` ON `likes`(`post_id`);
+
+-- Create `comments` table
+CREATE TABLE `comments` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT,
+    `post_id` INT,
+    `text` TEXT NOT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+    FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`)
+) ENGINE=InnoDB;
+
+-- Index for `user_id` and `post_id`
+CREATE INDEX `idx_comments_user_id` ON `comments`(`user_id`);
+CREATE INDEX `idx_comments_post_id` ON `comments`(`post_id`);
