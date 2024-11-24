@@ -1,4 +1,4 @@
-from posts.create import create_post
+from posts.foreground.create import create_post
 
 CONSUMER_TYPE_TO_TOPICS = {
     "POST_PROCESSOR": [

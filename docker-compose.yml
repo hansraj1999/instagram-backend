@@ -19,7 +19,8 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
       TYPE: SERVER
-  
+    
+
   worker:
     build:
       context: .
